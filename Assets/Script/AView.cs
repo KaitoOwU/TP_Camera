@@ -17,6 +17,16 @@ public abstract class AView : MonoBehaviour
             SetActive(true);
     }
 
+    private void OnEnable()
+    {
+        SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        SetActive(false);
+    }
+
     public void SetActive(bool active)
     {
         if (active)
