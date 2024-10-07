@@ -20,7 +20,21 @@ public struct CameraConfiguration
     {
         return pivot + GetRotation()*(Vector3.back*distance);
     }
-    
+
+    public static CameraConfiguration LerpConfig(CameraConfiguration a, CameraConfiguration b, float T)
+    {
+        return new CameraConfiguration()
+        {
+            yaw = Mathf.Lerp(a.yaw, b.yaw, T),
+            roll = Mathf.Lerp(a.roll, b.roll, T),
+            pitch = Mathf.Lerp(a.pitch, b.pitch, T),
+            fov = Mathf.Lerp(a.fov, b.fov, T),
+            distance = Mathf.Lerp(a.distance, b.distance, T),
+            pivot = Vector3.Lerp(a.pivot, b.pivot, T),
+        };
+    }
+
+
     public void DrawGizmos(Color color)
     {
         Gizmos.color = color;
@@ -30,5 +44,13 @@ public struct CameraConfiguration
         Gizmos.matrix = Matrix4x4.TRS(position, GetRotation(), Vector3.one);
         Gizmos.DrawFrustum(Vector3.zero, fov, 0.5f, 0f, Camera.main.aspect);
         Gizmos.matrix = Matrix4x4.identity;
+    }
+
+    public static float operator-(CameraConfiguration a, CameraConfiguration b)
+    {
+        Vector3 posDif = b.GetPosition() - a.GetPosition();
+        Quaternion rotaDif = b.GetRotation() * Quaternion.Inverse(a.GetRotation());
+        return posDif.magnitude +
+               rotaDif.x + rotaDif.y + rotaDif.z + rotaDif.w;
     }
 }

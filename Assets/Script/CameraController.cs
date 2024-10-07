@@ -9,9 +9,11 @@ public class CameraController : MonoBehaviour
     public static CameraController Instance { get; private set; }   
     public Camera MainCamera { get; private set; }
     [field:SerializeField] public float TransitionSpeed { get; private set; }
-    
+
+    [SerializeField] float _speed;
     private CameraConfiguration _currentConfiguration, _targetConfiguration;
     private List<AView> _activeViews = new List<AView>();
+    private float dampingT;
 
     private void Awake()
     {
@@ -22,20 +24,29 @@ public class CameraController : MonoBehaviour
 
         Instance = this;
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
+        _targetConfiguration = ComputeAverage();
+        _currentConfiguration = _targetConfiguration;
     }
 
     private void Update()
     {
         _targetConfiguration = ComputeAverage();
 
-        _currentConfiguration = _targetConfiguration;
         ApplyConfiguration();
     }
 
     private void ApplyConfiguration()
     {
-        MainCamera.transform.rotation = _currentConfiguration.GetRotation();
-        MainCamera.transform.position = _currentConfiguration.GetPosition();
+        if (_speed * Time.deltaTime < 1)
+            dampingT += (_targetConfiguration - _currentConfiguration) * _speed * Time.deltaTime;
+        else
+            dampingT = 1;
+
+        _currentConfiguration = CameraConfiguration.LerpConfig(_currentConfiguration, _targetConfiguration, dampingT);
+        
+        MainCamera.transform.rotation = this._currentConfiguration.GetRotation();
+        MainCamera.transform.position = this._currentConfiguration.GetPosition();
     }
 
     public void AddView(AView view)
