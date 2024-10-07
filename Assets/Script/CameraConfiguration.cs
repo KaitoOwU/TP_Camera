@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 [Serializable]
@@ -25,7 +26,8 @@ public struct CameraConfiguration
     {
         return new CameraConfiguration()
         {
-            yaw = Mathf.Lerp(a.yaw, b.yaw, T),
+            yaw = Vector2.SignedAngle(Vector2.right, Vector2.Lerp(new Vector2(Mathf.Cos(a.yaw * Mathf.Deg2Rad), Mathf.Sin(a.yaw * Mathf.Deg2Rad)), 
+                                                                  new Vector2(Mathf.Cos(b.yaw * Mathf.Deg2Rad), Mathf.Sin(b.yaw * Mathf.Deg2Rad)), T)),
             roll = Mathf.Lerp(a.roll, b.roll, T),
             pitch = Mathf.Lerp(a.pitch, b.pitch, T),
             fov = Mathf.Lerp(a.fov, b.fov, T),
