@@ -18,7 +18,7 @@ public struct CameraConfiguration
 
     public Vector3 GetPosition()
     {
-        return pivot + GetRotation()*(Vector3.back*distance);
+        return pivot + GetRotation() * (Vector3.back * distance);
     }
 
     public static CameraConfiguration LerpConfig(CameraConfiguration a, CameraConfiguration b, float T)
@@ -38,7 +38,7 @@ public struct CameraConfiguration
     public void DrawGizmos(Color color)
     {
         Gizmos.color = color;
-        Gizmos.DrawSphere(pivot, 0.25f);
+        Gizmos.DrawSphere(pivot, 0.1f);
         Vector3 position = GetPosition();
         Gizmos.DrawLine(pivot, position);
         Gizmos.matrix = Matrix4x4.TRS(position, GetRotation(), Vector3.one);
