@@ -8,8 +8,9 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController Instance { get; private set; }   
     public Camera MainCamera { get; private set; }
-    private CameraConfiguration _configuration;
+    [field:SerializeField] public float TransitionSpeed { get; private set; }
     
+    private CameraConfiguration _currentConfiguration, _targetConfiguration;
     private List<AView> _activeViews = new List<AView>();
 
     private void Awake()
@@ -20,17 +21,21 @@ public class CameraController : MonoBehaviour
         }
 
         Instance = this;
+        MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
     private void Update()
     {
+        _targetConfiguration = ComputeAverage();
+
+        _currentConfiguration = _targetConfiguration;
         ApplyConfiguration();
     }
 
     private void ApplyConfiguration()
     {
-        MainCamera.transform.rotation = _configuration.GetRotation();
-        MainCamera.transform.position = _configuration.GetPosition();
+        MainCamera.transform.rotation = _currentConfiguration.GetRotation();
+        MainCamera.transform.position = _currentConfiguration.GetPosition();
     }
 
     public void AddView(AView view)
@@ -64,6 +69,8 @@ public class CameraController : MonoBehaviour
         newConfig.distance /= weight;
         newConfig.fov /= weight;
         newConfig.pivot /= weight;
+
+        return newConfig;
     }
     
     private float ComputeAverageYaw()
@@ -77,6 +84,10 @@ public class CameraController : MonoBehaviour
         }
         return Vector2.SignedAngle(Vector2.right, sum);
     }
-    
-    
+
+    private void OnDrawGizmos()
+    {
+        _currentConfiguration.DrawGizmos(Color.red);
+        _targetConfiguration.DrawGizmos(Color.cyan);
+    }
 }
