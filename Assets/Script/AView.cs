@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class AView : MonoBehaviour
 {
 
-    public float weight;
+    [Min(1f)] public float weight;
     public bool isActiveAtStart;
 
     public abstract CameraConfiguration GetConfiguration();
@@ -27,6 +27,11 @@ public abstract class AView : MonoBehaviour
         {
             CameraController.Instance.RemoveView(this);
         }
+    }
+    
+    private void OnDrawGizmos()
+    {
+        GetConfiguration().DrawGizmos(Color.blue);
     }
 
 }
