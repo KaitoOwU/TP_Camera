@@ -10,9 +10,8 @@ public class CameraController : MonoBehaviour
     public Camera MainCamera { get; private set; }
 
     [SerializeField] float _transitionSpeed;
-    private CameraConfiguration _currentConfiguration, _targetConfiguration;
+    [SerializeField] private CameraConfiguration _currentConfiguration, _targetConfiguration;
     private List<AView> _activeViews = new List<AView>();
-    private float dampingT;
 
     private void Awake()
     {
@@ -40,6 +39,8 @@ public class CameraController : MonoBehaviour
 
     private void ApplyConfiguration()
     {
+        float dampingT;
+
         if (_transitionSpeed * Time.deltaTime < 1)
             dampingT = /*(_targetConfiguration - _currentConfiguration) * */_transitionSpeed * Time.deltaTime;
         else

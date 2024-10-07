@@ -31,11 +31,11 @@ public abstract class AView : MonoBehaviour
     {
         if (active)
         {
-            CameraController.Instance.AddView(this);
+            CameraController.Instance?.AddView(this);
         }
         else
         {
-            CameraController.Instance.RemoveView(this);
+            CameraController.Instance?.RemoveView(this);
         }
     }
     
