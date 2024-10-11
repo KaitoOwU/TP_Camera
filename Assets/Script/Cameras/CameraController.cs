@@ -14,6 +14,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float _transitionSpeed;
     [SerializeField] private CameraConfiguration _currentConfiguration, _targetConfiguration;
     private List<AView> _activeViews = new List<AView>();
+    private bool isCutRequested;
 
     private void Awake()
     {
@@ -35,19 +36,27 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         _targetConfiguration = ComputeAverage();
-        ApplyConfiguration();
+        ApplyConfiguration(!isCutRequested);
     }
 
-    private void ApplyConfiguration()
+    private void ApplyConfiguration(bool smooth)
     {
-        float dampingT;
+        if (smooth)
+        {
+            float dampingT;
 
-        if (_transitionSpeed * Time.deltaTime < 1)
-            dampingT = /*(_targetConfiguration - _currentConfiguration) * */_transitionSpeed * Time.deltaTime;
+            if (_transitionSpeed * Time.deltaTime < 1)
+                dampingT = _transitionSpeed * Time.deltaTime;
+            else
+                dampingT = 1;
+
+            _currentConfiguration = CameraConfiguration.LerpConfig(_currentConfiguration, _targetConfiguration, dampingT);
+        }
         else
-            dampingT = 1;
-
-        _currentConfiguration = CameraConfiguration.LerpConfig(_currentConfiguration, _targetConfiguration, dampingT);
+        {
+            _currentConfiguration = _targetConfiguration;
+            isCutRequested = false;
+        }
 
         MainCamera.transform.rotation = this._currentConfiguration.GetRotation();
         MainCamera.transform.position = this._currentConfiguration.GetPosition();        
@@ -100,6 +109,8 @@ public class CameraController : MonoBehaviour
         }
         return Vector2.SignedAngle(Vector2.right, sum);
     }
+    
+    public void Cut() => isCutRequested = true;
 
     private void OnDrawGizmos()
     {

@@ -19,7 +19,7 @@ public class ViewVolumeBlender : MonoBehaviour
         Instance = this;
     }
 
-    private void Update()
+    public void Update()
     {
         foreach (AView view in volumePerViews.Keys)
         {
