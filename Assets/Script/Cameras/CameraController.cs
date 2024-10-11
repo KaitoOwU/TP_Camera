@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController Instance { get; private set; }   
     public Camera MainCamera { get; private set; }
+    public ReadOnlyCollection<AView> ActiveViews => _activeViews.AsReadOnly();
 
     [SerializeField] float _transitionSpeed;
     [SerializeField] private CameraConfiguration _currentConfiguration, _targetConfiguration;
@@ -33,7 +35,6 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         _targetConfiguration = ComputeAverage();
-
         ApplyConfiguration();
     }
 

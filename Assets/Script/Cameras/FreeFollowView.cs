@@ -25,7 +25,9 @@ public class FreeFollowView : AView
     private void Update()
     {
         yaw = Mathf.Repeat(yaw + (yawSpeed * Time.deltaTime * Input.GetAxis("Horizontal")), 360f);
-        _curvePosition += curveSpeed * Time.deltaTime * Input.GetAxis("Vertical");
+        _curvePosition = Mathf.Clamp01(_curvePosition + curveSpeed * Time.deltaTime * Input.GetAxis("Vertical"));
+        
+        
     }
     
     public override CameraConfiguration GetConfiguration()
@@ -47,6 +49,7 @@ public class FreeFollowView : AView
 
     private void OnDrawGizmos()
     {
-        curve.DrawGizmos(Color.blue, transform.localToWorldMatrix);
+        curve.DrawGizmos(Color.blue, CurveToWorldMatrix);
+        Gizmos.DrawRay(target.position, target.forward * 100);
     }
 }
