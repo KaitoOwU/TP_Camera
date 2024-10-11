@@ -69,12 +69,13 @@ public class CameraController : MonoBehaviour
 
         foreach (AView view in _activeViews)
         {
+            var config = view.GetConfiguration();
             weight += view.weight;
-            newConfig.pitch += view.GetConfiguration().pitch * view.weight;
-            newConfig.roll += view.GetConfiguration().roll * view.weight;
-            newConfig.distance += view.GetConfiguration().distance * view.weight;
-            newConfig.fov += view.GetConfiguration().fov * view.weight;
-            newConfig.pivot += view.GetConfiguration().pivot * view.weight;
+            newConfig.pitch += config.pitch * view.weight;
+            newConfig.roll += config.roll * view.weight;
+            newConfig.distance += config.distance * view.weight;
+            newConfig.fov += config.fov * view.weight;
+            newConfig.pivot += config.pivot * view.weight;
         }
 
         newConfig.yaw = ComputeAverageYaw();

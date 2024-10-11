@@ -12,8 +12,7 @@ public class FixedPositionFollow : AView
     public GameObject centralPoint;
     [Range(0.0f, 180f)] public float yawOffsetMax;
     [Range(0, 90f)] public float pitchOffsetMax;
-    
-    
+
     public override CameraConfiguration GetConfiguration()
     {
         Vector3 centralDir = centralPoint.transform.position - transform.position;
