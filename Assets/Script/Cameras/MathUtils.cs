@@ -4,6 +4,13 @@ using UnityEngine;
 
 public static class MathUtils
 {
+    public static Vector3 GetNearestPointOnSegment(Vector3 a, Vector3 b, Vector3 c)
+    {
+        Vector3 n = (b - a).normalized;
+        float p = Vector3.Dot(c - a, n);
+        p = Mathf.Clamp(p, 0, Vector3.Distance(a, b));
+        return a + n * p;
+    }
 
     public static Vector3 LinearBezier(Vector3 a, Vector3 b, float t) => (1 - t) * a + t * b;
 
