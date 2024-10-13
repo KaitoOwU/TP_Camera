@@ -43,7 +43,6 @@ public class SphereViewVolume : AViewVolume
         Gizmos.DrawWireSphere(transform.position, innerRadius);
     }
     
-    //SECURITY
     private void OnValidate()
     {
         if (innerRadius > outerRadius)

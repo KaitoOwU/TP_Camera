@@ -47,7 +47,7 @@ public class Rail : MonoBehaviour
         int i = 0;
         int y = 1;
         float currentDistance = 0f;
-
+            
         while (true) {
 
             if (currentDistance + Vector3.Distance(nodes[i], nodes[y]) < distance) { 
