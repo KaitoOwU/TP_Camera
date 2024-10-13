@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     public ReadOnlyCollection<AView> ActiveViews => _activeViews.AsReadOnly();
 
     [SerializeField] float _transitionSpeed;
-    [SerializeField] private CameraConfiguration _currentConfiguration, _targetConfiguration;
+    private CameraConfiguration _currentConfiguration, _targetConfiguration;
     private List<AView> _activeViews = new List<AView>();
     private bool isCutRequested;
 

@@ -10,6 +10,7 @@ public abstract class AViewVolume : MonoBehaviour
     public static int nextUid = 0;
     
     [Min(0)] public int priority = 0;
+    [Range(0f, 1f)] public float weight;
     public AView view;
     public int Uid { get; private set; }
     public bool isCutOnSwitch;
@@ -22,17 +23,12 @@ public abstract class AViewVolume : MonoBehaviour
         ++nextUid;
     }
 
-    public virtual float ComputeSelfWeight() => 1.0f;
+    public virtual float ComputeSelfWeight(float remainingWeight) => remainingWeight * weight;
 
     protected void SetActive(bool active)
     {
         IsActive = active;
-
-        if (isCutOnSwitch)
-            ViewVolumeBlender.Instance.Update();
-        else
-            CameraController.Instance.Cut();
-
+        
         if (active)
         {
             ViewVolumeBlender.Instance.AddVolume(this);
@@ -41,5 +37,10 @@ public abstract class AViewVolume : MonoBehaviour
         {
             ViewVolumeBlender.Instance.RemoveVolume(this);
         }
+
+        if (!isCutOnSwitch)
+            ViewVolumeBlender.Instance.Update();
+        else
+            CameraController.Instance.Cut();
     }
 }

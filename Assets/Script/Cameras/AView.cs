@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class AView : MonoBehaviour
 {
 
-    [Min(1f)] public float weight;
+    [Range(0f, 1f), HideInInspector] public float weight;
 
     public abstract CameraConfiguration GetConfiguration();
 

@@ -12,6 +12,7 @@ public class SphereViewVolume : AViewVolume
 
     private void Update()
     {
+        _distance = (target.position - transform.position).magnitude;
         if (_distance <= outerRadius && !IsActive)
         {
             SetActive(true);
@@ -21,17 +22,25 @@ public class SphereViewVolume : AViewVolume
         }
     }
 
-    public override float ComputeSelfWeight()
+    public override float ComputeSelfWeight(float remainingWeight)
     {
-        return Mathf.Lerp(0f, 1f, (target.position - transform.position).normalized.magnitude);
+        float distance = Vector3.Distance(transform.position, target.position);
+        if (distance <= innerRadius) return base.ComputeSelfWeight(remainingWeight);
+        else if (distance >= outerRadius) return 0f;
+        else
+        {
+            distance -= innerRadius;
+            float delta = outerRadius - innerRadius;
+            return (delta - distance) / delta * base.ComputeSelfWeight(remainingWeight);
+        }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(target.position, outerRadius);
+        Gizmos.DrawWireSphere(transform.position, outerRadius);
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(target.position, innerRadius);
+        Gizmos.DrawWireSphere(transform.position, innerRadius);
     }
     
     //SECURITY

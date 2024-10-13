@@ -76,6 +76,7 @@ public class Rail : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Init();
         Gizmos.color = Color.magenta;
 
         for (int i = 0; i < nodes.Count; i++)

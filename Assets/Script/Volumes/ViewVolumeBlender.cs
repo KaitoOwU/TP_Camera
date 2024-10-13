@@ -21,22 +21,19 @@ public class ViewVolumeBlender : MonoBehaviour
 
     public void Update()
     {
-        foreach (AView view in volumePerViews.Keys)
+        List<AViewVolume> allVolumes = new();
+        foreach (AViewVolume viewVolume in activeViewVolumes)
         {
-            view.weight = 0;
+            viewVolume.view.weight = 0;
+            allVolumes.Add(viewVolume);
         }
 
-        activeViewVolumes = activeViewVolumes.OrderBy(v => v.priority).ThenBy(v => v.Uid).ToList();
-        float remainingWeight = 1.0f;
-        foreach (var volume in activeViewVolumes)
+        allVolumes = allVolumes.OrderBy(x => x.weight).ThenBy(x => x.Uid).ToList();
+        float totalWeight = 1f;
+        foreach (AViewVolume volume in allVolumes)
         {
-            float weight = Mathf.Clamp01(volume.ComputeSelfWeight());
-            remainingWeight -= weight;
-            foreach (var view in CameraController.Instance.ActiveViews)
-            {
-                view.weight *= remainingWeight;
-            }
-            volume.view.weight += weight;
+            volume.view.weight = volume.ComputeSelfWeight(totalWeight);
+            totalWeight -= volume.view.weight;
         }
     }
 
